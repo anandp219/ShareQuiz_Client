@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e1e1e1"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/otp_verification"
+        android:layout_marginBottom="50sp"
+        android:textSize="20sp"
+        android:text="@string/verify_otp_prompt" />
+
+    <com.goodiebag.pinview.Pinview
+        android:id="@+id/otp_verification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        app:cursorVisible="false"
+        app:hint=""
+        app:inputType="number"
+        app:password="false"
+        app:pinBackground="@drawable/example_drawable"
+        app:pinHeight="40sp"
+        app:pinLength="4"
+        app:pinWidth="40sp"/>
+
+    <Button
+        android:id="@+id/otp_button"
+        android:layout_below="@+id/otp_verification"
+        android:onClick="verifyOTP"
+        android:layout_width="300sp"
+        android:layout_marginTop="50sp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/verify_otp"/>
+
+</RelativeLayout>

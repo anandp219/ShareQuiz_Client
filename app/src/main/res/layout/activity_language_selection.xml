@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e1e1e1"
+    android:orientation="vertical"
+    android:padding="20sp">
+
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/username_box"
+        android:layout_marginBottom="20sp"
+        android:gravity="center"
+        android:text="@string/prompt_username"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/username_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/language_selector_prompt"
+        android:layout_marginBottom="20sp"
+        android:background="#fff"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/user_name"
+        android:inputType="textNoSuggestions|textVisiblePassword"
+        android:maxLength="10"
+        android:maxLines="1"
+        android:textSize="30sp" />
+
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/language_selector_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="20sp"
+        android:gravity="center"
+        android:text="@string/prompt_language"
+        android:textSize="30sp" />
+
+    <fragment
+        android:id="@+id/language_selector"
+        class="com.sharequiz.sharequiz.HorizontalItemsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/language_selector_prompt" />
+
+    <Button
+        android:layout_centerHorizontal="true"
+        android:id="@+id/submit_username_button"
+        android:layout_width="300sp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/language_selector"
+        android:layout_marginTop="30sp"
+        android:text="@string/submit"
+        android:textSize="30sp" />
+
+</RelativeLayout>

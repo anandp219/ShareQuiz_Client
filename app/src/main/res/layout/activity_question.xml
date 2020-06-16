@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/fetching_question"
+        android:textSize="30sp"
+        android:text="@string/new_question"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:id="@+id/question_activity"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20sp"
+            tools:context=".QuestionActivity">
+
+            <TextView
+                android:id="@+id/player1score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:text="10"
+                android:textSize="60sp" />
+
+            <TextView
+                android:id="@+id/player2score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/player1score"
+                android:layout_toRightOf="@+id/player1score"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:text="10"
+                android:textSize="60sp" />
+
+
+            <TextView
+                android:id="@+id/timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="10"
+                android:textSize="60sp" />
+
+            <TextView
+                android:id="@+id/textview_question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="100sp"
+                android:background="@drawable/rounded_corner"
+                android:padding="20sp"
+                android:text="Hi this is just a question. So the question is this. Is ram avatar malav a madarchod?"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/textview_option1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textview_question"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20sp"
+                android:background="@drawable/rounded_corner"
+                android:padding="20sp"
+                android:text="A: This is Option A. This is Option A"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/textview_option2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textview_option1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20sp"
+                android:background="@drawable/rounded_corner"
+                android:padding="20sp"
+                android:text="B: This is Option B. This is Option B"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/textview_option3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textview_option2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20sp"
+                android:background="@drawable/rounded_corner"
+                android:padding="20sp"
+                android:text="C: This is Option C. This is Option C"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/textview_option4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textview_option3"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20sp"
+                android:background="@drawable/rounded_corner"
+                android:padding="20sp"
+                android:text="D: This is Option D. This is Option D"
+                android:textSize="30sp" />
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

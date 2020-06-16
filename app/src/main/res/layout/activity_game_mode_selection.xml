@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameModeSelectionActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <TextView
+        android:id="@+id/topic_selector_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100sp"
+        android:layout_marginBottom="20sp"
+        android:gravity="center"
+        android:text="@string/prompt_topic"
+        android:textSize="30sp" />
+
+    <fragment
+        android:id="@+id/topic_selector"
+        class="com.sharequiz.sharequiz.HorizontalItemsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topic_selector_prompt"
+        android:layout_marginBottom="30sp" />
+
+    <LinearLayout
+        android:padding="20sp"
+        android:layout_below="@+id/topic_selector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/button_start_quiz"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:onClick="startQuiz"
+            android:layout_height="100sp"
+            android:text="@string/start_quiz" />
+
+        <Button
+            android:id="@+id/button_join_room"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="100sp"
+            android:text="@string/join_room" />
+
+        <Button
+            android:id="@+id/button_create_room"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="100sp"
+            android:text="@string/create_room" />
+    </LinearLayout>
+</RelativeLayout>

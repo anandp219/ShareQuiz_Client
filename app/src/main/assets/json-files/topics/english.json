@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "India",
+    "imageUrlSmall": "/static/images/india.png"
+  },
+  {
+    "id": 2,
+    "name": "Bollywood",
+    "imageUrlSmall": "/static/images/bollywood.png"
+  },
+  {
+    "id": 3,
+    "name": "Science",
+    "imageUrlSmall": "/static/images/science.png"
+  },
+  {
+    "id": 4,
+    "name": "Technology",
+    "imageUrlSmall": "/static/images/technology.png"
+  },
+  {
+    "id": 5,
+    "name": "World",
+    "imageUrlSmall": "/static/images/world.png"
+  }
+]

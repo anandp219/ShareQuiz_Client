@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PhoneVerificationActivity">
+
+    <TextView
+        android:id="@+id/enter_phone_prompt"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/phone_edit"
+        android:layout_marginBottom="50dp"
+        android:textSize="20sp"
+        android:text="@string/enter_phone_prompt" />
+
+    <EditText
+        android:id="@+id/phone_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:textSize="20sp"
+        android:maxLength="10"
+        android:gravity="center"
+        android:hint="8953438538"
+        android:inputType="phone" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_below="@+id/phone_edit"
+        android:onClick="getOTP"
+        android:layout_width="300sp"
+        android:layout_marginTop="50sp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/get_otp"/>
+
+</RelativeLayout>
