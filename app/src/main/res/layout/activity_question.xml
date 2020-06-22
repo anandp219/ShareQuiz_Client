@@ -65,7 +65,7 @@
                 android:background="@drawable/rounded_corner"
                 android:padding="20sp"
                 android:text="Hi this is just a question. So the question is this. Is ram avatar malav a madarchod?"
-                android:textSize="30sp" />
+                android:textSize="@dimen/question_text" />
 
             <TextView
                 android:id="@+id/textview_option1"
@@ -77,7 +77,7 @@
                 android:background="@drawable/rounded_corner"
                 android:padding="20sp"
                 android:text="A: This is Option A. This is Option A"
-                android:textSize="30sp" />
+                android:textSize="@dimen/option_text" />
 
             <TextView
                 android:id="@+id/textview_option2"
@@ -89,7 +89,7 @@
                 android:background="@drawable/rounded_corner"
                 android:padding="20sp"
                 android:text="B: This is Option B. This is Option B"
-                android:textSize="30sp" />
+                android:textSize="@dimen/option_text" />
 
             <TextView
                 android:id="@+id/textview_option3"
@@ -101,7 +101,7 @@
                 android:background="@drawable/rounded_corner"
                 android:padding="20sp"
                 android:text="C: This is Option C. This is Option C"
-                android:textSize="30sp" />
+                android:textSize="@dimen/option_text" />
 
             <TextView
                 android:id="@+id/textview_option4"
@@ -113,7 +113,7 @@
                 android:background="@drawable/rounded_corner"
                 android:padding="20sp"
                 android:text="D: This is Option D. This is Option D"
-                android:textSize="30sp" />
+                android:textSize="@dimen/option_text" />
         </RelativeLayout>
 
     </ScrollView>

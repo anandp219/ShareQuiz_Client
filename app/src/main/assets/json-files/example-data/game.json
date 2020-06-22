@@ -1,0 +1,157 @@
+{
+  "id":33,
+  "language":1,
+  "maxQuestions":1,
+  "numberOfPlayers": 2,
+  "questionNumber":1,
+  "players":{
+    "8953438538":{
+      "id":"8953438538",
+      "score":0,
+      "selected":0
+    },
+    "9835017056":{
+      "id":"9835017056",
+      "score":0,
+      "selected":0
+    }
+  },
+  "status":1,
+  "createdTimestamp":1592768786,
+  "questions":[
+    {
+      "questionText":"The headquarters of the National Power Training institute is located in",
+      "options":[
+        "Pune",
+        "Bhopal",
+        "Faridabad",
+        "Lucknow"
+      ],
+      "answer":"C",
+      "playerAnswers":{
+
+      }
+    },
+    {
+      "questionText":"The members of the panchayat are",
+      "options":[
+        "nominated by the district officer",
+        "the electorates of the respective territorial constituencies",
+        "nominated by local self-government minister of the state",
+        "nominated by the block development organization"
+      ],
+      "answer":"B",
+      "playerAnswers":{
+
+      }
+    },
+    {
+      "questionText":"Which of the following is not an undertaking under the administrative control of Ministry of Railways?",
+      "options":[
+        "Container Corporation of India Limited",
+        "Konkan Railway Corporation Limited",
+        "Indian Railways Construction Company Limited",
+        "Diesel Locomotive Works, Varanasi"
+      ],
+      "answer":"C",
+      "playerAnswers":{
+
+      }
+    },
+    {
+      "questionText":"Who has scored the most Test hundreds ever?",
+      "options":[
+        "Steve Waugh",
+        "Sachin Tendulkar",
+        "Shane Warne",
+        "Sunil Gavaskar"
+      ],
+      "answer":"B",
+      "playerAnswers":{
+
+      }
+    },
+    {
+      "questionText":"On which one of the followings is the benefits received principle of taxation to achieve optimality bases?",
+      "options":[
+        "Marginal benefit received",
+        "Total benefit received",
+        "Average benefit received",
+        "Ability to pay for the benefit"
+      ],
+      "answer":"D",
+      "playerAnswers":{
+
+      }
+    },
+    {
+      "questionText":"Who among the following is NOT associated with billiards in India?",
+      "options":[
+        "Subash Agrawal",
+        "Ashok Shandilya",
+        "Manoj Kothari",
+        "Mihir Sen"
+      ],
+      "answer":"D",
+      "playerAnswers":{
+
+      }
+    },
+    {
+      "questionText":"The members of the parliamentary committee",
+      "options":[
+        "are appointed by the president in consultation with the prime minister",
+        "are appointed by the president on the recommendation of the speaker",
+        "are taken from various groups and parties in Parliament in proportion to their respective strength",
+        "both (b) and (c)"
+      ],
+      "answer":"C",
+      "playerAnswers":{
+
+      }
+    },
+    {
+      "questionText":"The river Godavari  is often referred to as Vridha Ganga because",
+      "options":[
+        "it is the older river of India",
+        "of its large size and extent among the peninsular rivers",
+        "there are a fairly large number of pilgrimage centres situated on its banks",
+        "its length is nearly the same as that of the river Ganges"
+      ],
+      "answer":"B",
+      "playerAnswers":{
+
+      }
+    },
+    {
+      "questionText":"The members of the state legislature exercise control over the council of the ministers through",
+      "options":[
+        "questions and supplementary questions",
+        "criticism of its policies",
+        "adjournment motion",
+        "All of the above"
+      ],
+      "answer":"D",
+      "playerAnswers":{
+
+      }
+    },
+    {
+      "questionText":"'Madhubani',  a style of folk paintings, is popular in which of the following states in India?",
+      "options":[
+        "Uttar Pradesh",
+        "Rajasthan",
+        "Madhya Pradesh",
+        "Bihar"
+      ],
+      "answer":"D",
+      "playerAnswers":{
+
+      }
+    }
+  ],
+  "scores": {
+    "8953438538": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "9835017056": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }
+}

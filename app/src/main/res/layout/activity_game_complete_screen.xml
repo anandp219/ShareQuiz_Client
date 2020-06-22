@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/start_new_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/game_complete_screen_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:onClick="newGame"
+        android:text="@string/start_new_quiz"
+        android:textSize="30sp" />
+
+    <LinearLayout
+        android:id="@+id/game_complete_screen_text"
+        android:layout_width="match_parent"
+        android:layout_height="100sp"
+        android:layout_centerInParent="true"
+        android:background="@color/colorDark"
+        android:orientation="horizontal"
+        android:padding="10sp">
+
+        <TextView
+            android:id="@+id/your_score_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:width="0sp"
+            android:background="@color/colorLight"
+            android:textAlignment="center"
+            android:textSize="@dimen/question_text" />
+
+        <TextView
+            android:id="@+id/opponent_score_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/question_text"
+            android:layout_marginLeft="@dimen/question_text"
+            android:layout_weight="1"
+            android:width="0sp"
+            android:background="@color/colorLight"
+            android:textAlignment="center"
+            android:textSize="@dimen/question_text" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/game_complete_screen_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30sp"
+        android:text="@string/result"
+        android:textSize="30sp" />
+
+</RelativeLayout>

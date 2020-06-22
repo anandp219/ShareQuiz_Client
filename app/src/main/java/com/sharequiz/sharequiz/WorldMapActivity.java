@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,10 +12,14 @@ import android.view.animation.LinearInterpolator;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.gson.JsonObject;
 import com.sharequiz.sharequiz.enums.Language;
 import com.sharequiz.sharequiz.lib.SharedPrefsHelper;
 import com.sharequiz.sharequiz.lib.ToastHelper;
+import com.sharequiz.sharequiz.utils.Constants;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -164,7 +166,7 @@ public class WorldMapActivity extends AppCompatActivity {
             Intent intent;
             if (!response.equals("-1")) {
                 intent = new Intent(activity, QuestionActivity.class);
-                intent.putExtra(QuestionActivity.GAME_ID, response);
+                intent.putExtra(Constants.GAME_ID, response);
             } else {
                 toastHelper.makeToast("Error while starting the game for the user");
                 intent = new Intent(activity, GameModeSelectionActivity.class);

@@ -2,6 +2,7 @@ package com.sharequiz.sharequiz.di;
 
 import android.app.Application;
 
+import com.sharequiz.sharequiz.GameCompleteScreenActivity;
 import com.sharequiz.sharequiz.GameModeSelectionActivity;
 import com.sharequiz.sharequiz.HorizontalItemsFragment;
 import com.sharequiz.sharequiz.LanguageSelectionActivity;
@@ -28,5 +29,5 @@ public interface AppComponent {
     void inject(GameModeSelectionActivity gameModeSelectionActivity);
     void inject(WorldMapActivity worldMapActivity);
     void inject(QuestionActivity questionActivity);
-
+    void inject(GameCompleteScreenActivity gameCompleteScreenActivity);
 }

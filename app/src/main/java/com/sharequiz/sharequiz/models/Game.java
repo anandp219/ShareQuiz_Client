@@ -15,6 +15,10 @@ public class Game implements Serializable {
     private int questionNumber;
     private Map<String, Player> players;
 
+    public Game(int id) {
+        this.id = id;
+    }
+
     public Game(int id, Language language, int maxQuestions, int numberOfPlayers,
                 int questionNumber, Map<String, Player> players, Status status,
                 Long createdTimestamp, List<Question> questions,

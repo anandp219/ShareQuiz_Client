@@ -3,22 +3,23 @@ package com.sharequiz.sharequiz;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatTextView;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.gson.JsonIOException;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.Socket;
+import com.github.nkzawa.socketio.client.IO;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sharequiz.sharequiz.lib.ToastHelper;
 import com.sharequiz.sharequiz.models.Game;
 import com.sharequiz.sharequiz.models.Question;
@@ -26,82 +27,151 @@ import com.sharequiz.sharequiz.models.Room;
 import com.sharequiz.sharequiz.utils.Constants;
 import com.sharequiz.sharequiz.utils.HttpUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
 
 import javax.inject.Inject;
-
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 public class QuestionActivity extends AppCompatActivity {
 
     private QuestionActivity questionActivity;
-    public static final String GAME_ID = "game_id";
     public String gameId;
-    private String answer;
+    public String answer;
+    public String selectedAnswer;
+    public CountDownTimer countDownTimer;
     private int questionNumber;
     private Question question;
-    private TextView textView;
+    private TextView newQuestionTextView;
     private ScrollView scrollView;
     private OptionView option1View, option2View, option3View, option4View;
     private TextView questionView, timerView, player1ScoreView, player2ScoreView;
-    private Socket socket;
     private String opponentId;
     private static ToastHelper toastHelperStatic;
+    private final String[] TRANSPORTS = {Constants.WEBSOCKET_PROTOCOL};
+    private Socket socket;
+    private int TIME_FOR_A_GAME_IN_MILLIS = 10000;
+    private int TIME_FOR_A_SECOND_IN_MILLIS = 1000;
+    private boolean disableClick;
+    private Game game;
+    private String opponentAnswer;
 
     @Inject
     ToastHelper toastHelper;
 
-    private static final class OptionView extends AppCompatTextView {
-        private View textView;
+    private final class OptionView extends AppCompatTextView {
+        private TextView textView;
+        private String answerNumber;
 
-        OptionView(Context context, final View textView) {
+        OptionView(Context context, final View textView, String answerNumber) {
             super(context);
-            this.textView = textView;
+            this.textView = (TextView) textView;
+            this.answerNumber = answerNumber;
             textView.setOnClickListener(optionClickListener);
+        }
+
+        void setText(String text) {
+            textView.setText(text);
+        }
+
+        @Override
+        public void setBackgroundColor(int color) {
+            textView.setBackgroundColor(color);
         }
 
         private OnClickListener optionClickListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                QuestionActivity.toastHelperStatic.makeToast(((TextView) textView).getText().toString());
+                if (!disableClick) {
+                    disableClick = true;
+                    selectedAnswer = answerNumber;
+                    if (answer.equals(answerNumber)) {
+                        textView.setBackgroundColor(getResources().getColor(R.color.green));
+                    } else {
+                        textView.setBackgroundColor(getResources().getColor(R.color.red));
+                    }
+                    optionClicked(answer.equals(answerNumber));
+                }
             }
         };
+    }
+
+    private void optionClicked(boolean correctAnswerClicked) {
+        countDownTimer.cancel();
+        String seconds = timerView.getText().toString();
+        Map<String, List<Integer>> scores = game.getScores();
+        List<Integer> scoresForUser = scores.get(HttpUtils.PHONE_NUMBER);
+        Question question = game.getQuestions().get(game.getQuestionNumber() - 1);
+        question.getPlayerAnswers().put(HttpUtils.PHONE_NUMBER, selectedAnswer);
+        if (correctAnswerClicked) {
+            scoresForUser.set(questionNumber,
+                (Integer.parseInt(seconds) * 1000 * Constants.SCORE_FOR_CORRECT_ANSWER) / TIME_FOR_A_GAME_IN_MILLIS);
+        }
+        scores.put(HttpUtils.PHONE_NUMBER, scoresForUser);
+        game.setScores(scores);
+        updatePlayerScore();
+        socket.emit(Constants.ANSWER_EVENT, HttpUtils.getJSONObject(game));
+    }
+
+    private void updatePlayerScore() {
+        player1ScoreView.setText(getScore(game, HttpUtils.PHONE_NUMBER));
+        player2ScoreView.setText(getScore(game, opponentId));
+        if (questionNumber == game.getMaxQuestions()) {
+            moveToGameCompleteScreen();
+        } else {
+            moveToNextQuestion();
+        }
+    }
+
+    public static String getScore(Game game, String playerID) {
+        int totalScore = 0;
+        for (Integer score : game.getScores().get(playerID)) {
+            totalScore += score;
+        }
+        return String.valueOf(totalScore);
+    }
+
+    private void moveToNextQuestion() {
+        game.setQuestionNumber(game.getQuestionNumber() + 1);
+        Handler handler = new Handler();
+        Runnable r = new Runnable() {
+            public void run() {
+                scrollView.setVisibility(View.INVISIBLE);
+                newQuestionTextView.setVisibility(View.VISIBLE);
+                Handler handler = new Handler();
+                Runnable r = new Runnable() {
+                    public void run() {
+                        showGameQuestion();
+                    }
+                };
+                handler.postDelayed(r, Constants.TIME_DELAY_FOR_NEW_QUESTION);
+            }
+        };
+        handler.postDelayed(r, Constants.TIME_DELAY_FOR_NEW_QUESTION);
+    }
+
+    private void moveToGameCompleteScreen() {
+        // Wait for the socket activity
+        startGameCompleteActivity();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.toastHelperStatic = toastHelper;
-        try {
-            socket = IO.socket("http://localhost");
-        } catch (Exception ex) {
-            Log.e("Question_Activity", "Error while connecting the socket to backend", ex);
-            startGameSelectionActivity();
-        }
         ((ShareQuizApplication) getApplication()).getAppComponent().inject(this);
         setContentView(R.layout.activity_question);
         questionActivity = this;
-        gameId = getIntent().getStringExtra(GAME_ID);
-        textView = findViewById(R.id.fetching_question);
+        gameId = getIntent().getStringExtra(Constants.GAME_ID);
+        newQuestionTextView = findViewById(R.id.fetching_question);
         scrollView = findViewById(R.id.question_activity);
         questionView = findViewById(R.id.textview_question);
-        option1View = new OptionView(questionActivity, findViewById(R.id.textview_option1));
-        option2View = new OptionView(questionActivity, findViewById(R.id.textview_option2));
-        option3View = new OptionView(questionActivity, findViewById(R.id.textview_option3));
-        option4View = new OptionView(questionActivity, findViewById(R.id.textview_option4));
+        option1View = new OptionView(questionActivity, findViewById(R.id.textview_option1), "A");
+        option2View = new OptionView(questionActivity, findViewById(R.id.textview_option2), "B");
+        option3View = new OptionView(questionActivity, findViewById(R.id.textview_option3), "C");
+        option4View = new OptionView(questionActivity, findViewById(R.id.textview_option4), "D");
         player1ScoreView = findViewById(R.id.player1score);
         player2ScoreView = findViewById(R.id.player2score);
         timerView = findViewById(R.id.timer);
@@ -129,18 +199,102 @@ public class QuestionActivity extends AppCompatActivity {
         alert.show();
     }
 
+    // Remove this function after clearing the game
+    private Game getExampleGame() {
+        Type listType = new TypeToken<Game>() {
+        }.getType();
+        String jsonFilePath = "json-files/example-data/game.json";
+        try {
+            BufferedReader bufferedReader =
+                new BufferedReader(new InputStreamReader(this.getAssets().open(jsonFilePath)));
+            return new Gson().fromJson(bufferedReader, listType);
+        } catch (Exception ex) {
+            return new Game(33);
+        }
+    }
+
     private void createGame() {
-        String response = "-1";
+        initialiseSocket();
         Room room = new Room(gameId, HttpUtils.PHONE_NUMBER);
-        socket.on(Constants.NEW_QUESTION, new Emitter.Listener() {
+        socket.on(Constants.NEW_QUESTION_EVENT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Game game = (Game) args[0];
-                showGameQuestion(game);
+                handleNewQuestionEvent((String) args[0]);
             }
         });
-        socket.connect();
-        socket.emit(Constants.JOIN_EVENT, room);
+        socket.on(Constants.NEW_ANSWER_EVENT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                handleNewAnswerEvent((String) args[0]);
+            }
+        });
+        socket.on(Constants.NEW_QUESTION_EVENT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                handleNewQuestionEvent((String) args[0]);
+            }
+        });
+        socket.on(Constants.GAME_OVER_EVENT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                handleGameOverEvent((String) args[0]);
+            }
+        });
+        socket.emit(Constants.JOIN_EVENT, HttpUtils.getJSONObject(room));
+    }
+
+    private void handleNewQuestionEvent(String gameString) {
+        Gson g = new Gson();
+        game = g.fromJson(gameString, Game.class);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showGameQuestion();
+                Set<String> playerIds = game.getPlayers().keySet();
+                for (String playerId : playerIds) {
+                    if (!HttpUtils.PHONE_NUMBER.equals(playerId)) {
+                        opponentId = playerId;
+                    }
+                }
+            }
+        });
+    }
+
+    private void handleNewAnswerEvent(String gameString) {
+        Gson g = new Gson();
+        game = g.fromJson(gameString, Game.class);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Question question = game.getQuestions().get(game.getQuestionNumber() - 1);
+                opponentAnswer = question.getPlayerAnswers().get(opponentId);
+                if (opponentAnswer != null && selectedAnswer != null) {
+                    endRoundScreen();
+                }
+            }
+        });
+    }
+
+    private void handleGameOverEvent(String gameString) {
+        Gson g = new Gson();
+        game = g.fromJson(gameString, Game.class);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            }
+        });
+    }
+
+    private void initialiseSocket() {
+        try {
+            final IO.Options options = new IO.Options();
+            options.transports = TRANSPORTS;
+            socket = IO.socket("http://" + BuildConfig.OTP_URL_HOST + ":8082", options);
+            socket.connect();
+        } catch (Exception ex) {
+            Log.e("Question_Activity", "Error while connecting the socket to backend", ex);
+            startGameSelectionActivity();
+        }
     }
 
     private void startGameSelectionActivity() {
@@ -149,28 +303,67 @@ public class QuestionActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void showGameQuestion(Game game) {
+    private void startGameCompleteActivity() {
+        Intent intent = new Intent(questionActivity, GameCompleteScreenActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.EXTRA_GAME, game);
+        intent.putExtra(Constants.OPPONENT_ID, opponentId);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private void timerEnd() {
+        if (questionNumber == game.getMaxQuestions()) {
+            moveToGameCompleteScreen();
+        } else {
+            moveToNextQuestion();
+        }
+    }
+
+    private void showGameQuestion() {
         if (game != null) {
-            Set<String> playerIds = game.getPlayers().keySet();
-            for (String playerId : playerIds) {
-                if (!HttpUtils.PHONE_NUMBER.equals(playerId)) {
-                    opponentId = playerId;
-                }
-            }
-            textView.setVisibility(View.GONE);
+            initialiseGameScreen();
+            newQuestionTextView.setVisibility(View.GONE);
             scrollView.setVisibility(View.VISIBLE);
             questionNumber = game.getQuestionNumber();
-            question = game.getQuestions().get(questionNumber);
+            question = game.getQuestions().get(questionNumber - 1);
             questionView.setText(question.getQuestionText());
             option1View.setText(question.getOptions().get(0));
             option2View.setText(question.getOptions().get(1));
             option3View.setText(question.getOptions().get(2));
             option4View.setText(question.getOptions().get(3));
             answer = question.getAnswer();
-            player1ScoreView.setText(String.valueOf(game.getScores().get(HttpUtils.PHONE_NUMBER)));
-            player2ScoreView.setText(String.valueOf(game.getScores().get(opponentId)));
+            player1ScoreView.setText(getScore(game, HttpUtils.PHONE_NUMBER));
+            player2ScoreView.setText(getScore(game, opponentId));
+            countDownTimer = new CountDownTimer(TIME_FOR_A_GAME_IN_MILLIS,
+                TIME_FOR_A_SECOND_IN_MILLIS) {
+                public void onTick(long millisUntilFinished) {
+                    timerView.setText(String.valueOf(millisUntilFinished / 1000));
+                }
+
+                public void onFinish() {
+                    disableClick = true;
+                    timerView.setText("0");
+                    timerEnd();
+                }
+            }.start();
         } else {
             startGameSelectionActivity();
         }
+    }
+
+    private void initialiseGameScreen() {
+        disableClick = false;
+        selectedAnswer = null;
+        opponentAnswer = null;
+        option1View.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        option2View.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        option3View.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        option4View.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+    }
+
+    private void endRoundScreen() {
+        newQuestionTextView.setVisibility(View.VISIBLE);
+        scrollView.setVisibility(View.GONE);
     }
 }
