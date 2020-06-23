@@ -8,18 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 public class Game implements Serializable {
-    private int id;
+    private String id;
     private Language language;
     private int maxQuestions;
     private int numberOfPlayers;
     private int questionNumber;
     private Map<String, Player> players;
 
-    public Game(int id) {
+    public Game(String id) {
         this.id = id;
     }
 
-    public Game(int id, Language language, int maxQuestions, int numberOfPlayers,
+    public Game(String id, Language language, int maxQuestions, int numberOfPlayers,
                 int questionNumber, Map<String, Player> players, Status status,
                 Long createdTimestamp, List<Question> questions,
                 Map<String, List<Integer>> scores) {
@@ -40,11 +40,11 @@ public class Game implements Serializable {
     private List<Question> questions;
     private Map<String, List<Integer>> scores;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

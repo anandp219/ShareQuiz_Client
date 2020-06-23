@@ -15,7 +15,7 @@
 
     <ScrollView
         android:id="@+id/question_activity"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
