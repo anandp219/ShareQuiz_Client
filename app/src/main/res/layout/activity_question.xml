@@ -13,6 +13,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:id="@+id/game_over"
+        android:textSize="30sp"
+        android:visibility="gone"
+        android:text="@string/game_over"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <ScrollView
         android:id="@+id/question_activity"
         android:visibility="invisible"

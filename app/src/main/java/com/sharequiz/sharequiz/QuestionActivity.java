@@ -40,15 +40,16 @@ public class QuestionActivity extends AppCompatActivity {
     public CountDownTimer countDownTimer;
     private int questionNumber;
     private TextView newQuestionTextView;
+    private TextView gameOverView;
     private ScrollView scrollView;
     private OptionView option1View, option2View, option3View, option4View;
     private TextView questionView, timerView, player1ScoreView, player2ScoreView;
     private String opponentId;
     private final String[] TRANSPORTS = {Constants.WEBSOCKET_PROTOCOL};
     private Socket socket;
-    private int TIME_FOR_A_GAME_IN_MILLIS = 100000;
+    private int TIME_FOR_A_GAME_IN_MILLIS = 10000;
     private int TIME_FOR_A_SECOND_IN_MILLIS = 1000;
-    private boolean disableClick;
+    private Boolean disableClick = false;
     private Game game;
     private String opponentAnswer;
 
@@ -84,6 +85,7 @@ public class QuestionActivity extends AppCompatActivity {
         questionActivity = this;
         gameId = getIntent().getStringExtra(Constants.GAME_ID);
         newQuestionTextView = findViewById(R.id.fetching_question);
+        gameOverView = findViewById(R.id.game_over);
         scrollView = findViewById(R.id.question_activity);
         questionView = findViewById(R.id.textview_question);
         option1View = new OptionView(questionActivity, findViewById(R.id.textview_option1), "A");
@@ -110,27 +112,32 @@ public class QuestionActivity extends AppCompatActivity {
         socket.on(Constants.NEW_QUESTION_EVENT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                Log.d(HttpUtils.PHONE_NUMBER, Constants.NEW_QUESTION_EVENT);
                 handleNewQuestionEvent((String) args[0]);
             }
         });
         socket.on(Constants.NEW_ANSWER_EVENT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                Log.d(HttpUtils.PHONE_NUMBER, Constants.NEW_ANSWER_EVENT);
                 handleNewAnswerEvent((String) args[0]);
             }
         });
-        socket.on(Constants.GAME_OVER_EVENT, new Emitter.Listener() {
+        socket.once(Constants.GAME_OVER_EVENT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                Log.d(HttpUtils.PHONE_NUMBER, Constants.GAME_OVER_EVENT);
                 handleGameOverEvent((String) args[0]);
             }
         });
-        socket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+        socket.once(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                    handleDisconnectEvent();
+                Log.d(HttpUtils.PHONE_NUMBER, Socket.EVENT_DISCONNECT);
+                handleDisconnectEvent();
             }
         });
+        Log.d(HttpUtils.PHONE_NUMBER, Constants.JOIN_EVENT);
         socket.emit(Constants.JOIN_EVENT, HttpUtils.getJSONObject(room));
     }
 
@@ -138,7 +145,7 @@ public class QuestionActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(socket.connected()) {
+                if (socket.connected()) {
                     socket.close();
                 }
                 startGameSelectionActivity();
@@ -150,7 +157,7 @@ public class QuestionActivity extends AppCompatActivity {
         try {
             final IO.Options options = new IO.Options();
             options.transports = TRANSPORTS;
-            socket = IO.socket("http://" + BuildConfig.OTP_URL_HOST + ":8082", options);
+            socket = IO.socket("http://" + BuildConfig.OTP_URL_HOST + ":8083", options);
             socket.connect();
         } catch (Exception ex) {
             Log.e("Question_Activity", "Error while connecting the socket to backend", ex);
@@ -177,14 +184,13 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void handleNewAnswerEvent(String gameString) {
         Gson g = new Gson();
-        game = g.fromJson(gameString, Game.class);
+        final Game tempGame = g.fromJson(gameString, Game.class);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Question question = game.getQuestions().get(questionNumber);
-                opponentAnswer = question.getPlayerAnswers().get(opponentId);
-                if (opponentAnswer != null && selectedAnswer != null) {
-                    endRoundScreen();
+                Question question = tempGame.getQuestions().get(questionNumber);
+                if (question.getPlayerAnswers().keySet().size() == 2) {
+                    endRoundScreen(tempGame.getQuestionNumber() == tempGame.getMaxQuestions());
                 }
             }
         });
@@ -193,26 +199,35 @@ public class QuestionActivity extends AppCompatActivity {
     private void handleGameOverEvent(String gameString) {
         Gson g = new Gson();
         game = g.fromJson(gameString, Game.class);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                startGameCompleteActivity();
-            }
-        });
+        runOnUiThread(
+            new Runnable() {
+                @Override
+                public void run() {
+                    startGameCompleteActivity();
+                }
+            });
     }
 
-    private void endRoundScreen() {
+    private void endRoundScreen(boolean hasGameEnded) {
         scrollView.setVisibility(View.GONE);
-        newQuestionTextView.setVisibility(View.VISIBLE);
+        if (hasGameEnded) {
+            gameOverView.setVisibility(View.VISIBLE);
+        } else {
+            newQuestionTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void startGameSelectionActivity() {
-        socket.close();
+        if(socket != null) {
+            socket.close();
+        }
         Intent intent = new Intent(questionActivity, GameModeSelectionActivity.class);
         startActivity(intent);
     }
 
     private void startGameCompleteActivity() {
+        socket.off();
+        socket.close();
         Intent intent = new Intent(questionActivity, GameCompleteScreenActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.EXTRA_GAME, game);
@@ -221,18 +236,11 @@ public class QuestionActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void timerEnd() {
-        disableClick = true;
-        timerView.setText("0");
-        Question question = game.getQuestions().get(questionNumber);
-        question.getPlayerAnswers().put(HttpUtils.PHONE_NUMBER, "E");
-        socket.emit(Constants.TIME_OUT_EVENT, new Gson().toJson(game));
-    }
-
     private void showGameQuestion() {
         if (game != null) {
             initialiseGameScreen();
             newQuestionTextView.setVisibility(View.GONE);
+            gameOverView.setVisibility(View.GONE);
             scrollView.setVisibility(View.VISIBLE);
             questionNumber = game.getQuestionNumber();
             Question question = game.getQuestions().get(questionNumber);
@@ -251,7 +259,7 @@ public class QuestionActivity extends AppCompatActivity {
                 }
 
                 public void onFinish() {
-                    timerEnd();
+                    sendAnswer("E", null);
                 }
             }.start();
         } else {
@@ -293,35 +301,37 @@ public class QuestionActivity extends AppCompatActivity {
         private OnClickListener optionClickListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!disableClick) {
-                    disableClick = true;
-                    selectedAnswer = answerNumber;
-                    if (answer.equals(answerNumber)) {
-                        textView.setBackgroundColor(getResources().getColor(R.color.green));
-                    } else {
-                        textView.setBackgroundColor(getResources().getColor(R.color.red));
-                    }
-                    optionClicked(answer.equals(answerNumber));
-                }
+                sendAnswer(answerNumber, textView);
             }
         };
     }
 
-    private void optionClicked(boolean correctAnswerClicked) {
-        countDownTimer.cancel();
-        String seconds = timerView.getText().toString();
-        Map<String, List<Integer>> scores = game.getScores();
-        List<Integer> scoresForUser = scores.get(HttpUtils.PHONE_NUMBER);
-        Question question = game.getQuestions().get(questionNumber);
-        question.getPlayerAnswers().put(HttpUtils.PHONE_NUMBER, selectedAnswer);
-        if (correctAnswerClicked) {
-            scoresForUser.set(questionNumber,
-                (Integer.parseInt(seconds) * 1000 * Constants.SCORE_FOR_CORRECT_ANSWER) / TIME_FOR_A_GAME_IN_MILLIS);
+    private void sendAnswer(String answerNumber, TextView optionTextView) {
+        synchronized (disableClick) {
+            if (disableClick)
+                return;
+            disableClick = true;
+            countDownTimer.cancel();
+            String seconds = timerView.getText().toString();
+            Map<String, List<Integer>> scores = game.getScores();
+            List<Integer> scoresForUser = scores.get(HttpUtils.PHONE_NUMBER);
+            Question question = game.getQuestions().get(questionNumber);
+            question.getPlayerAnswers().put(HttpUtils.PHONE_NUMBER, answerNumber);
+            if (answer.equals(answerNumber)) {
+                optionTextView.setBackgroundColor(getResources().getColor(R.color.green));
+                scoresForUser.set(questionNumber,
+                    (Integer.parseInt(seconds) * 1000 * Constants.SCORE_FOR_CORRECT_ANSWER) / TIME_FOR_A_GAME_IN_MILLIS);
+            } else if (!answerNumber.equals("E")) {
+                optionTextView.setBackgroundColor(getResources().getColor(R.color.red));
+            }
+            scores.put(HttpUtils.PHONE_NUMBER, scoresForUser);
+            game.setScores(scores);
+            updatePlayerScore();
+            selectedAnswer = null;
+            Log.d(HttpUtils.PHONE_NUMBER,
+                Constants.ANSWER_EVENT + " OPTION clicked " + answerNumber + " " + questionNumber);
+            socket.emit(Constants.ANSWER_EVENT, new Gson().toJson(game));
         }
-        scores.put(HttpUtils.PHONE_NUMBER, scoresForUser);
-        game.setScores(scores);
-        updatePlayerScore();
-        socket.emit(Constants.ANSWER_EVENT, new Gson().toJson(game));
     }
 
     private void updatePlayerScore() {

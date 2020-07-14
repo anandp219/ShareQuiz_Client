@@ -1,6 +1,7 @@
 package com.sharequiz.sharequiz;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -43,8 +45,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
 
     private void verifyOTP(String otp) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT,
-            BuildConfig.OTP_URL + "/api/v1/otp?otp=" + otp + "&phone_number=" + phoneNumber, null
-            , new Response.Listener<JSONObject>() {
+            BuildConfig.OTP_URL + "/api/v1/otp?otp=" + otp + "&phone_number=" + Uri.encode(PhoneVerificationActivity.getPhoneNumberForCountry(phoneNumber)), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d(TAG, response.toString());
@@ -73,6 +74,8 @@ public class OTPVerificationActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             }
         });
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(50000,
+            0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         HttpUtils.getRequestQueue().add(jsonObjectRequest);
     }
 

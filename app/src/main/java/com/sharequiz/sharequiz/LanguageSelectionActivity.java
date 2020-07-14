@@ -1,6 +1,7 @@
 package com.sharequiz.sharequiz;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.sharequiz.sharequiz.enums.Language;
 import com.sharequiz.sharequiz.lib.LanguageHelper;
 import com.sharequiz.sharequiz.lib.SharedPrefsHelper;
+import com.sharequiz.sharequiz.utils.CommonUtils;
+
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -62,7 +66,7 @@ public class LanguageSelectionActivity extends AppCompatActivity implements Hori
         final String userName = editText.getText().toString();
         if (selectedLanguage == null || userName.length() == 0) {
             String text = selectedLanguage == null ? "Please select a language" :
-                "Please enter " + "a" + " username";
+                "Please enter a username";
             Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
         } else {
             Log.d(TAG,
@@ -76,6 +80,7 @@ public class LanguageSelectionActivity extends AppCompatActivity implements Hori
                         new SharedPrefsHelper.OnEventListener<String>() {
                         @Override
                         public void onSuccess(String s) {
+                            setLocale(CommonUtils.getLocaleString(selectedLanguage));
                             startActivity(intent);
                         }
 
@@ -101,5 +106,13 @@ public class LanguageSelectionActivity extends AppCompatActivity implements Hori
 
     @Override
     public void onBackPressed() {
+    }
+
+    public void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 }

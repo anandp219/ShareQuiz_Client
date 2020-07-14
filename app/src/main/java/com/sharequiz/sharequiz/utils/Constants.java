@@ -7,7 +7,7 @@ public class Constants {
     public static final String NEW_QUESTION_EVENT = "new_question";
     public static final String NEW_ANSWER_EVENT = "new_answer";
     public static final String GAME_OVER_EVENT = "game_over";
-    public static final String TIME_OUT_EVENT = "time_out";
+    public static final String GAME_EVENT = "game";
 
     // Constant for protocol
     public static final String WEBSOCKET_PROTOCOL = "websocket";

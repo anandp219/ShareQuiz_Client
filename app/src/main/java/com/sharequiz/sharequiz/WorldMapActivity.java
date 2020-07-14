@@ -1,34 +1,29 @@
 package com.sharequiz.sharequiz;
 
 import android.animation.ValueAnimator;
-import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 
-import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.JsonObject;
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.sharequiz.sharequiz.enums.Language;
+import com.sharequiz.sharequiz.enums.Topic;
 import com.sharequiz.sharequiz.lib.SharedPrefsHelper;
 import com.sharequiz.sharequiz.lib.ToastHelper;
+import com.sharequiz.sharequiz.models.GameData;
 import com.sharequiz.sharequiz.utils.Constants;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Base64;
-
+import com.sharequiz.sharequiz.utils.HttpUtils;
 import javax.inject.Inject;
 
 public class WorldMapActivity extends AppCompatActivity {
@@ -37,6 +32,8 @@ public class WorldMapActivity extends AppCompatActivity {
     private HorizontalScrollView scroll1;
     private HorizontalScrollView scroll2;
     private int topicId;
+    private Socket socket;
+    private final String[] TRANSPORTS = {Constants.WEBSOCKET_PROTOCOL};
 
     @Inject
     SharedPrefsHelper sharedPrefsHelper;
@@ -80,9 +77,7 @@ public class WorldMapActivity extends AppCompatActivity {
             new SharedPrefsHelper.OnEventListener<String>() {
             @Override
             public void onSuccess(String s) {
-                MyClientTask myClientTask = new MyClientTask(BuildConfig.OTP_URL_HOST, 8081, s,
-                    topicId, worldMapActivity, toastHelper);
-                myClientTask.execute();
+                joinGame(s);
             }
 
             @Override
@@ -90,6 +85,66 @@ public class WorldMapActivity extends AppCompatActivity {
                 toastHelper.makeToast("Error while starting game for the topic");
             }
         });
+    }
+
+    void joinGame(String language) {
+        initialiseSocket();
+        GameData gameData = new GameData(Language.valueOf(language), Topic.values()[topicId]);
+        socket.once(Constants.GAME_EVENT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.d(HttpUtils.PHONE_NUMBER, Constants.GAME_EVENT);
+                handleGameEvent((String) args[0]);
+            }
+        });
+        socket.once(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.d(HttpUtils.PHONE_NUMBER, Socket.EVENT_DISCONNECT);
+                startGameSelectionActivity();
+            }
+        });
+        socket.emit(Constants.JOIN_EVENT, HttpUtils.getJSONObject(gameData));
+    }
+
+    private void handleGameEvent(final String gameID) {
+        runOnUiThread(
+            new Runnable() {
+                @Override
+                public void run() {
+                    startQuestionActivity(gameID);
+                }
+            });
+    }
+
+    private void initialiseSocket() {
+        try {
+            final IO.Options options = new IO.Options();
+            options.path = "/socket.io/join_game/";
+            options.transports = TRANSPORTS;
+            socket = IO.socket("http://" + BuildConfig.OTP_URL_HOST + ":8082", options);
+            socket.connect();
+        } catch (Exception ex) {
+            Log.e("World_Map_Activity", "Error while connecting the socket for world map activity", ex);
+            startGameSelectionActivity();
+        }
+    }
+
+    private void startGameSelectionActivity() {
+        if(socket != null) {
+            socket.close();
+        }
+        Intent intent = new Intent(this, GameModeSelectionActivity.class);
+        startActivity(intent);
+    }
+
+    private void startQuestionActivity(String gameID) {
+        if(socket != null) {
+            socket.close();
+        }
+        Intent intent = new Intent(this, QuestionActivity.class);
+        intent.putExtra(Constants.GAME_ID, gameID);
+        startActivity(intent);
     }
 
     static class TouchListener implements View.OnTouchListener {
@@ -100,78 +155,8 @@ public class WorldMapActivity extends AppCompatActivity {
         }
     }
 
-    public static class MyClientTask extends AsyncTask<Void, Void, Void> {
-
-        String dstAddress;
-        String language;
-        String response = "-1";
-        Activity activity;
-        int topic;
-        int dstPort;
-        ToastHelper toastHelper;
-
-        MyClientTask(String address, int port, String language, int topic, Activity activity,
-                     ToastHelper toastHelper) {
-            this.dstAddress = address;
-            this.dstPort = port;
-            this.topic = topic;
-            this.language = language;
-            this.activity = activity;
-            this.toastHelper = toastHelper;
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @Override
-        protected Void doInBackground(Void... arg0) {
-
-            Socket socket = null;
-
-            try {
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty(GameModeSelectionActivity.TOPIC_ID,
-                    Integer.toString(this.topic));
-                jsonObject.addProperty(SharedPrefsHelper.LANGUAGE,
-                    String.valueOf(Language.valueOf(this.language).ordinal()));
-                socket = new Socket(dstAddress, dstPort);
-
-                DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                dataOutputStream.write(jsonObject.toString().getBytes());
-                dataOutputStream.flush();
-
-                DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-                byte[] buffer = new byte[4096];
-                int n = dataInputStream.read(buffer);
-                response = new String(Arrays.copyOf(buffer, n));
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }  catch (Exception ex) {
-                ex.printStackTrace();
-            } finally {
-                if (socket != null) {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            Intent intent;
-            if (!response.equals("-1")) {
-                intent = new Intent(activity, QuestionActivity.class);
-                intent.putExtra(Constants.GAME_ID, response);
-            } else {
-                toastHelper.makeToast("Error while starting the game for the user");
-                intent = new Intent(activity, GameModeSelectionActivity.class);
-            }
-            activity.startActivity(intent);
-        }
+    @Override
+    public void onBackPressed() {
+        startGameSelectionActivity();
     }
 }

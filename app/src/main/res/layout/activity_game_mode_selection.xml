@@ -6,13 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".GameModeSelectionActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:layout_below="@+id/topic_selector"
+        android:padding="20sp">
+
+        <Button
+            android:id="@+id/button_start_quiz"
+            android:layout_width="0dp"
+            android:layout_height="100sp"
+            android:layout_weight="1"
+            android:onClick="startQuiz"
+            android:textSize="@dimen/question_text"
+            android:text="@string/start_quiz" />
+
+        <Button
+            android:id="@+id/button_join_room"
+            android:layout_width="0dp"
+            android:layout_height="100sp"
+            android:layout_weight="1"
+            android:text="@string/join_room"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/button_create_room"
+            android:layout_width="0dp"
+            android:layout_height="100sp"
+            android:layout_weight="1"
+            android:text="@string/create_room"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/topic_selector_prompt"
@@ -25,6 +49,14 @@
         android:text="@string/prompt_topic"
         android:textSize="30sp" />
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
     <fragment
         android:id="@+id/topic_selector"
         class="com.sharequiz.sharequiz.HorizontalItemsFragment"
@@ -32,33 +64,4 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/topic_selector_prompt"
         android:layout_marginBottom="30sp" />
-
-    <LinearLayout
-        android:padding="20sp"
-        android:layout_below="@+id/topic_selector"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/button_start_quiz"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:onClick="startQuiz"
-            android:layout_height="100sp"
-            android:text="@string/start_quiz" />
-
-        <Button
-            android:id="@+id/button_join_room"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="100sp"
-            android:text="@string/join_room" />
-
-        <Button
-            android:id="@+id/button_create_room"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="100sp"
-            android:text="@string/create_room" />
-    </LinearLayout>
 </RelativeLayout>

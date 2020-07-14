@@ -16,12 +16,13 @@
     <string name="join_room">Join Room</string>
     <string name="create_room">Create Room</string>
     <string name="new_question">New Question</string>
+    <string name="game_over">Game Over</string>
     <string name="start_new_quiz">Start New Quiz</string>
     <string name="result">Result</string>
     <string name="you_won_string">You Won</string>
     <string name="you_lose_string">You Lose</string>
     <string name="match_tie_string">Tied Match</string>
-    <string name="your_string">Your \n %1$s</string>
+    <string name="your_string">You \n %1$s</string>
     <string name="opponent_string">Opponent \n %1$s</string>
     <string name="title_activity_game_complete_screen">GameCompleteScreenActivity</string>
     <!-- Strings used for fragments for navigation -->

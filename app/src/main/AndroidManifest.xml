@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.sharequiz.sharequiz"
+    android:versionCode="1"
+    android:versionName="whiskey"
     android:targetSandboxVersion="1">
 
     <application xmlns:tools="http://schemas.android.com/tools"

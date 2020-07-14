@@ -19,17 +19,21 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", 'OTP_URL', "\"http:192.168.0.181:8080\""
-            buildConfigField "String", 'OTP_URL_HOST', "\"192.168.0.181\""
+            buildConfigField "String", 'OTP_URL', "\"http://api.sharequiz.app:8080\""
+            buildConfigField "String", 'OTP_URL_HOST', "\"api.sharequiz.app\""
         }
         staging {
-            buildConfigField "String", 'OTP_URL', "\"http://192.168.0.181:8080\""
-            buildConfigField "String", 'OTP_URL_HOST', "\"192.168.0.181\""
+            buildConfigField "String", 'OTP_URL', "\"http://api.sharequiz.app:8080\""
+            buildConfigField "String", 'OTP_URL_HOST', "\"api.sharequiz.app\""
         }
         release {
-            buildConfigField "String", 'OTP_URL', "\"http://192.168.0.181:8080\""
-            buildConfigField "String", 'OTP_URL_HOST', "\"192.168.0.181\""
+            buildConfigField "String", 'OTP_URL', "\"http://api.sharequiz.app:8080\""
+            buildConfigField "String", 'OTP_URL_HOST', "\"api.sharequiz.app\""
         }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 
