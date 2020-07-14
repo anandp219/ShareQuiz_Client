@@ -2,19 +2,21 @@ package com.sharequiz.sharequiz;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.sharequiz.sharequiz.enums.Language;
 import com.sharequiz.sharequiz.lib.SharedPrefsHelper;
 import com.sharequiz.sharequiz.lib.ToastHelper;
+import com.sharequiz.sharequiz.utils.CommonUtils;
 
 import java.util.Locale;
 
@@ -44,6 +46,12 @@ public class GameModeSelectionActivity extends AppCompatActivity implements Hori
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        selectedTopic = -1;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = getMenuInflater();
         mi.inflate(R.menu.menu_main, menu);
@@ -69,7 +77,7 @@ public class GameModeSelectionActivity extends AppCompatActivity implements Hori
             new SharedPrefsHelper.OnEventListener<String>() {
             @Override
             public void onSuccess(String s) {
-                setLocale(language.equals(Language.HINDI.name()) ? "hi" : "en");
+                setLocale(CommonUtils.getLocaleString(Language.valueOf(language)));
             }
 
             @Override
@@ -95,6 +103,9 @@ public class GameModeSelectionActivity extends AppCompatActivity implements Hori
     }
 
     public void startQuiz(View v) {
+        if(selectedTopic == -1) {
+            return;
+        }
         Intent intent = new Intent(this, WorldMapActivity.class);
         intent.putExtra(TOPIC_ID, selectedTopic);
         startActivity(intent);

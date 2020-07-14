@@ -6,4 +6,11 @@
     <string name="join_room">रूम ज्वाइन करें</string>
     <string name="create_room">रूम बनाएँ</string>
     <string name="new_question">नया सवाल</string>
+    <string name="start_new_quiz">नई प्रश्नोत्तरी शुरू करें</string>
+    <string name="result">परिणाम</string>
+    <string name="you_won_string">आप जीते</string>
+    <string name="you_lose_string">आप हारे</string>
+    <string name="match_tie_string">बराबरी का खेल</string>
+    <string name="your_string">आपका \n %1$s</string>
+    <string name="opponent_string">प्रतिद्वंद्वी \n %1$s</string>
 </resources>

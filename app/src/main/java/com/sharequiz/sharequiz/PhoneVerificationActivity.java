@@ -1,12 +1,15 @@
 package com.sharequiz.sharequiz;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -17,6 +20,7 @@ import com.sharequiz.sharequiz.utils.HttpUtils;
 
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -53,8 +57,7 @@ public class PhoneVerificationActivity extends AppCompatActivity {
     private void requestOtp(final String phoneNumber) {
         HttpUtils.PHONE_NUMBER = phoneNumber;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-            BuildConfig.OTP_URL + "/api/v1/otp?phone_number=" + phoneNumber, null,
-            new Response.Listener<JSONObject>() {
+            BuildConfig.OTP_URL + "/api/v1/otp?phone_number=" + Uri.encode(getPhoneNumberForCountry(phoneNumber)), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Intent intent = new Intent(phoneVerificationActivity,
@@ -68,7 +71,13 @@ public class PhoneVerificationActivity extends AppCompatActivity {
                 toastHelper.makeToast("Error while sending OTP");
             }
         });
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(50000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         HttpUtils.getRequestQueue().add(jsonObjectRequest);
+    }
+
+    public static String getPhoneNumberForCountry(String phoneNumber) {
+        return "+91" + phoneNumber;
     }
 
     private boolean validatePhoneNumber(String phoneNumber) {

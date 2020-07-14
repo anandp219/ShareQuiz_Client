@@ -2,10 +2,11 @@ package com.sharequiz.sharequiz;
 
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sharequiz.sharequiz.enums.Language;
@@ -24,14 +28,13 @@ import com.sharequiz.sharequiz.models.Topic;
 import com.sharequiz.sharequiz.utils.HttpUtils;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +44,7 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HorizontalItemsFragment extends Fragment {
+public class HorizontalItemsFragment extends androidx.fragment.app.Fragment {
 
     interface HorizontalMenuItemClickListener {
         void itemClicked(View view);
@@ -121,10 +124,10 @@ public class HorizontalItemsFragment extends Fragment {
                         View menuItem =
                             LayoutInflater.from(getContext()).inflate(R.layout.horizontal_menu_item_topic, linearLayout, false);
                         menuItem.setId(topic.getId());
-                        ImageButton button = menuItem.findViewById(R.id.image_of_item);
+                        final ImageButton button = menuItem.findViewById(R.id.image_of_item);
                         TextView topicText = menuItem.findViewById(R.id.name_of_item);
                         topicText.setText(topic.getName());
-                        Picasso.with(getContext()).load(HttpUtils.getImageUrl(topic.getImageUrlSmall())).placeholder(R.drawable.example_drawable).into(button);
+                        Glide.with(getContext()).load(HttpUtils.getImageUrl(topic.getImageUrlSmall())).into(button);
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
