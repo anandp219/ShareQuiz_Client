@@ -34,6 +34,7 @@ public class WorldMapActivity extends AppCompatActivity {
     private int topicId;
     private Socket socket;
     private final String[] TRANSPORTS = {Constants.WEBSOCKET_PROTOCOL};
+    private boolean gameStarted;
 
     @Inject
     SharedPrefsHelper sharedPrefsHelper;
@@ -43,6 +44,7 @@ public class WorldMapActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        gameStarted = false;
         ((ShareQuizApplication) getApplication()).getAppComponent().inject(this);
         setContentView(R.layout.activity_world_map);
         topicId = getIntent().getIntExtra(GameModeSelectionActivity.TOPIC_ID, -1);
@@ -53,7 +55,6 @@ public class WorldMapActivity extends AppCompatActivity {
         scroll2.setOnTouchListener(new TouchListener());
         final ImageView backgroundOne = findViewById(R.id.background_one);
         final ImageView backgroundTwo = findViewById(R.id.background_two);
-
         final ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.setInterpolator(new LinearInterpolator());
@@ -100,6 +101,7 @@ public class WorldMapActivity extends AppCompatActivity {
         socket.once(Constants.GAME_EVENT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                gameStarted = true;
                 Log.d(HttpUtils.PHONE_NUMBER, Constants.GAME_EVENT);
                 handleGameEvent((String) args[0]);
             }
@@ -108,7 +110,9 @@ public class WorldMapActivity extends AppCompatActivity {
             @Override
             public void call(Object... args) {
                 Log.d(HttpUtils.PHONE_NUMBER, Socket.EVENT_DISCONNECT);
-                startGameSelectionActivity();
+                if(!gameStarted) {
+                    startGameSelectionActivity();
+                }
             }
         });
         socket.emit(Constants.JOIN_EVENT, HttpUtils.getJSONObject(gameData));

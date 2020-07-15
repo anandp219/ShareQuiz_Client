@@ -52,6 +52,7 @@ public class QuestionActivity extends AppCompatActivity {
     private Boolean disableClick = false;
     private Game game;
     private String opponentAnswer;
+    private boolean isGameLive;
 
     @Inject
     ToastHelper toastHelper;
@@ -80,6 +81,7 @@ public class QuestionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isGameLive = true;
         ((ShareQuizApplication) getApplication()).getAppComponent().inject(this);
         setContentView(R.layout.activity_question);
         questionActivity = this;
@@ -145,8 +147,9 @@ public class QuestionActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (socket.connected()) {
-                    socket.close();
+                isGameLive = false;
+                if(countDownTimer != null) {
+                    countDownTimer.cancel();
                 }
                 startGameSelectionActivity();
             }
@@ -219,6 +222,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void startGameSelectionActivity() {
         if(socket != null) {
+            socket.off();
             socket.close();
         }
         Intent intent = new Intent(questionActivity, GameModeSelectionActivity.class);
@@ -259,12 +263,18 @@ public class QuestionActivity extends AppCompatActivity {
                 }
 
                 public void onFinish() {
-                    sendAnswer("E", null);
+                    if(isGameLive) {
+                        sendAnswer("E", null);
+                    }
                 }
             }.start();
         } else {
             startGameSelectionActivity();
         }
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     private void initialiseGameScreen() {

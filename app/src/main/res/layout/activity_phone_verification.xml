@@ -27,7 +27,7 @@
         android:textSize="20sp"
         android:maxLength="10"
         android:gravity="center"
-        android:hint="8953438538"
+        android:hint="9999999999"
         android:inputType="phone" />
 
     <Button
