@@ -89,6 +89,11 @@ public class HorizontalItemsFragment extends androidx.fragment.app.Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         View view = getView();

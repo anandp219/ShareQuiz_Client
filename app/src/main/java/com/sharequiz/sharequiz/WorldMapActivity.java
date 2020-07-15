@@ -72,6 +72,13 @@ public class WorldMapActivity extends AppCompatActivity {
         checkForOpponent();
     }
 
+    @Override
+    protected void onDestroy() {
+        Log.d("socket", "on destroy");
+        super.onDestroy();
+        destroySocket();
+    }
+
     private void checkForOpponent() {
         sharedPrefsHelper.getValue(SharedPrefsHelper.LANGUAGE,
             new SharedPrefsHelper.OnEventListener<String>() {
@@ -131,9 +138,7 @@ public class WorldMapActivity extends AppCompatActivity {
     }
 
     private void startGameSelectionActivity() {
-        if(socket != null) {
-            socket.close();
-        }
+        destroySocket();
         Intent intent = new Intent(this, GameModeSelectionActivity.class);
         startActivity(intent);
     }
@@ -158,5 +163,12 @@ public class WorldMapActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         startGameSelectionActivity();
+    }
+
+    private void destroySocket() {
+        Log.d("socket", "destroy socket");
+        if(socket != null) {
+            socket.close();
+        }
     }
 }

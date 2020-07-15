@@ -19,8 +19,8 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", 'OTP_URL', "\"http://api.sharequiz.app:8080\""
-            buildConfigField "String", 'OTP_URL_HOST', "\"api.sharequiz.app\""
+            buildConfigField "String", 'OTP_URL', "\"http://192.168.1.4:8080\""
+            buildConfigField "String", 'OTP_URL_HOST', "\"192.168.1.4\""
         }
         staging {
             buildConfigField "String", 'OTP_URL', "\"http://api.sharequiz.app:8080\""

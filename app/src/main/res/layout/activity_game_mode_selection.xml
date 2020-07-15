@@ -57,9 +57,8 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <fragment
+    <FrameLayout
         android:id="@+id/topic_selector"
-        class="com.sharequiz.sharequiz.HorizontalItemsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/topic_selector_prompt"

@@ -42,9 +42,8 @@
         android:text="@string/prompt_language"
         android:textSize="30sp" />
 
-    <fragment
+    <FrameLayout
         android:id="@+id/language_selector"
-        class="com.sharequiz.sharequiz.HorizontalItemsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/language_selector_prompt" />
