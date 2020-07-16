@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">ShareQuiz</string>
+    <string name="your_string">நீங்கள் \n %1$s</string>
+    <string name="opponent_string">எதிரிகள் \n %1$s</string>
+    <string name="prompt_topic">உங்கள் தலைப்பைத் தேர்வுசெய்க</string>
+    <string name="start_quiz">வினாடி வினாவைத் தொடங்கவும்</string>
+    <string name="new_question">புதிய கேள்வி </string>
+    <string name="start_new_quiz">புதிய வினாடி வினாவைத் தொடங்கவும்</string>
+    <string name="result">விளைவாக</string>
+    <string name="you_won_string">நீ வென்றாய்</string>
+    <string name="you_lose_string">நீ தோற்றுவிட்டாய்</string>
+    <string name="match_tie_string">சம மதிப்பெண்</string>
+    <string name="join_room">சேர அறை</string>
+    <string name="create_room">உருவாக்கு அறை</string>
+</resources>

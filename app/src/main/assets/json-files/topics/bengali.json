@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "ভারত",
+    "imageUrlSmall": "/static/images/india.png"
+  }
+  //  {
+  //    "id": 2,
+  //    "name": "विज्ञान",
+  //    "imageUrlSmall": "/static/images/science.png"
+  //  },
+  //  {
+  //    "id": 3,
+  //    "name": "प्रौद्योगिकी",
+  //    "imageUrlSmall": "/static/images/technology.png"
+  //  },
+  //  {
+  //    "id": 4,
+  //    "name": "विश्व",
+  //    "imageUrlSmall": "/static/images/world.png"
+  //  },
+  //  {
+  //    "id": 5,
+  //    "name": "बॉलीवुड",
+  //    "imageUrlSmall": "/static/images/bollywood.png"
+  //  }
+]

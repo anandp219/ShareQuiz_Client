@@ -16,7 +16,7 @@ public class LanguageHelper {
     Application mApplication;
 
     public List<Language> LANGUAGES_SUPPORTED = new ArrayList<>(Arrays.asList(Language.HINDI,
-        Language.ENGLISH));
+        Language.ENGLISH, Language.TAMIL, Language.BENGALI));
 
     @Inject
     public LanguageHelper(Application application) {

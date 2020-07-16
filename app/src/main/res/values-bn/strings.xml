@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">ShareQuiz</string>
+    <string name="your_string">তোমার \n %1$s</string>
+    <string name="opponent_string">প্রতিদ্বন্দ্বী \n %1$s</string>
+    <string name="prompt_topic">আপনার বিষয় চয়ন করুন</string>
+    <string name="start_quiz">কুইজ শুরু করুন</string>
+    <string name="new_question">নতুন প্রশ্ন</string>
+    <string name="start_new_quiz">নতুন কুইজ শুরু করুন</string>
+    <string name="result">ফলাফল</string>
+    <string name="you_won_string">তুমি জিতেছিলে</string>
+    <string name="you_lose_string">তুমি হেরেছ</string>
+    <string name="match_tie_string">সমান খেলা</string>
+    <string name="join_room">রুমে যোগ দিন</string>
+    <string name="create_room">ঘর সৃষ্টি</string>
+</resources>

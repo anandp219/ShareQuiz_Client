@@ -6,9 +6,11 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.util.Util;
 import com.sharequiz.sharequiz.enums.Language;
 import com.sharequiz.sharequiz.lib.LanguageHelper;
 import com.sharequiz.sharequiz.lib.SharedPrefsHelper;
+import com.sharequiz.sharequiz.utils.CommonUtils;
 import com.sharequiz.sharequiz.utils.HttpUtils;
 
 import java.io.Serializable;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(String s) {
                                 valueMap.put(SharedPrefsHelper.LANGUAGE, s);
-                                Locale locale = new Locale(s.equals(Language.HINDI.name()) ? "hi" : "en");
+                                Locale locale = new Locale(CommonUtils.getLocaleString(Language.valueOf(s)));
                                 Locale.setDefault(locale);
                                 Configuration config = new Configuration();
                                 config.locale = locale;

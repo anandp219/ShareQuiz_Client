@@ -67,6 +67,12 @@ public class GameModeSelectionActivity extends AppCompatActivity implements Hori
             case R.id.action_hindi:
                 changeLanguage(Language.HINDI.name());
                 return true;
+            case R.id.action_tamil:
+                changeLanguage(Language.TAMIL.name());
+                return true;
+            case R.id.action_bengali:
+                changeLanguage(Language.BENGALI.name());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

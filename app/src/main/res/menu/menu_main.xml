@@ -8,5 +8,12 @@
         android:id="@+id/action_hindi"
         android:title="@string/hindi"
         app:showAsAction="never" />
-
+    <item
+        android:id="@+id/action_tamil"
+        android:title="@string/tamil"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_bengali"
+        android:title="@string/bengali"
+        app:showAsAction="never" />
 </menu>
