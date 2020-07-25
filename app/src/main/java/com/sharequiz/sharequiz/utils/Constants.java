@@ -3,6 +3,7 @@ package com.sharequiz.sharequiz.utils;
 public class Constants {
     // Event constants
     public static final String JOIN_EVENT = "join";
+    public static final String JOIN_WITH_ROOM_EVENT = "join_with_room";
     public static final String ANSWER_EVENT = "answer";
     public static final String NEW_QUESTION_EVENT = "new_question";
     public static final String NEW_ANSWER_EVENT = "new_answer";

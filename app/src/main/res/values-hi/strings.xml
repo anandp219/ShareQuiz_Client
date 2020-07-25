@@ -12,4 +12,8 @@
     <string name="match_tie_string">बराबरी का खेल</string>
     <string name="your_string">आपका \n %1$s</string>
     <string name="opponent_string">प्रतिद्वंद्वी \n %1$s</string>
+    <string name="room_string">रूम आईडी</string>
+    <string name="creating_room_string">रूम बन रहा है…</string>
+    <string name="creating_room_error">कक्ष बनाते समय त्रुटि…</string>
+    <string name="joining_room_error">रूम ज्वाइन करते समय त्रुटि। \n सुनिश्चित करें कि विषय और भाषा समान हैं</string>
 </resources>

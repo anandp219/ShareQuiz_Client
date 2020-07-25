@@ -10,6 +10,7 @@ import com.sharequiz.sharequiz.MainActivity;
 import com.sharequiz.sharequiz.OTPVerificationActivity;
 import com.sharequiz.sharequiz.PhoneVerificationActivity;
 import com.sharequiz.sharequiz.QuestionActivity;
+import com.sharequiz.sharequiz.RoomActivity;
 import com.sharequiz.sharequiz.WorldMapActivity;
 
 import javax.inject.Singleton;
@@ -30,4 +31,5 @@ public interface AppComponent {
     void inject(WorldMapActivity worldMapActivity);
     void inject(QuestionActivity questionActivity);
     void inject(GameCompleteScreenActivity gameCompleteScreenActivity);
+    void inject(RoomActivity roomActivity);
 }
