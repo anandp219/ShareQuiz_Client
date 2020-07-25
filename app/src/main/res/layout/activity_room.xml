@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e1e1e1"
+    android:orientation="vertical"
+    android:padding="20sp">
+
+    <EditText
+        android:layout_centerHorizontal="true"
+        android:id="@+id/room_id_box"
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/room_string_id"
+        android:autofillHints=""
+        android:background="#fff"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="1234"
+        android:inputType="textNoSuggestions|textVisiblePassword"
+        android:maxLength="10"
+        android:maxLines="1"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/room_string_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="20sp"
+        android:gravity="center"
+        android:text="@string/room_string"
+        android:textSize="30sp" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/room_id_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/room_string_id"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="20sp"
+        android:gravity="center"
+        android:text="@string/creating_room_string"
+        android:textSize="30sp" />
+
+    <Button
+        android:onClick="joinRoom"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/join_room_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/room_string_id"
+        android:layout_marginTop="100sp"
+        android:text="@string/join_room"
+        android:textSize="20sp" />
+</RelativeLayout>

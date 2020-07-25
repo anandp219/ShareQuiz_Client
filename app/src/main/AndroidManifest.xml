@@ -15,18 +15,18 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:replace="allowBackup,supportsRtl">
+        <activity android:name=".RoomActivity"></activity>
         <activity
             android:name=".GameCompleteScreenActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_game_complete_screen"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".QuestionActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <activity
             android:name=".WorldMapActivity"
             android:configChanges="orientation|keyboardHidden"

@@ -27,4 +27,8 @@
     <string name="tamil">தமிழ்</string>
     <string name="bengali">বাংলা</string>
     <string name="title_activity_game_complete_screen">GameCompleteScreenActivity</string>
+    <string name="room_string">Room ID</string>
+    <string name="creating_room_string">Creating Room...</string>
+    <string name="creating_room_error">Error while creating Room…</string>
+    <string name="joining_room_error">Error while joining Room. \n Make sure the topic and language are same</string>
 </resources>

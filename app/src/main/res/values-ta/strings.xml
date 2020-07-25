@@ -12,4 +12,8 @@
     <string name="match_tie_string">சம மதிப்பெண்</string>
     <string name="join_room">சேர அறை</string>
     <string name="create_room">உருவாக்கு அறை</string>
+    <string name="room_string">அறை ஐடி</string>
+    <string name="creating_room_string">அறை ஆகிவிட்டது…</string>
+    <string name="creating_room_error">அறையை உருவாக்கும் போது பிழை…</string>
+    <string name="joining_room_error">அறையில் சேரும்போது பிழை. \n தலைப்பும் மொழியும் ஒன்றே என்பதை உறுதிப்படுத்திக் கொள்ளுங்கள்</string>
 </resources>
