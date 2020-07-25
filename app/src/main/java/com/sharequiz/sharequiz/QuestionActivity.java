@@ -47,7 +47,7 @@ public class QuestionActivity extends AppCompatActivity {
     private String opponentId;
     private final String[] TRANSPORTS = {Constants.WEBSOCKET_PROTOCOL};
     private Socket socket;
-    private int TIME_FOR_A_GAME_IN_MILLIS = 10000;
+    private int TIME_FOR_A_GAME_IN_MILLIS = 15000;
     private int TIME_FOR_A_SECOND_IN_MILLIS = 1000;
     private Boolean disableClick = false;
     private Game game;

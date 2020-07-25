@@ -20,6 +20,7 @@ import com.sharequiz.sharequiz.enums.Topic;
 import com.sharequiz.sharequiz.lib.SharedPrefsHelper;
 import com.sharequiz.sharequiz.lib.ToastHelper;
 import com.sharequiz.sharequiz.models.GameData;
+import com.sharequiz.sharequiz.models.GameRoom;
 import com.sharequiz.sharequiz.utils.Constants;
 import com.sharequiz.sharequiz.utils.HttpUtils;
 import javax.inject.Inject;
@@ -30,6 +31,7 @@ public class WorldMapActivity extends AppCompatActivity {
     private HorizontalScrollView scroll1;
     private HorizontalScrollView scroll2;
     private int topicId;
+    private String roomID;
     private Socket socket;
     private final String[] TRANSPORTS = {Constants.WEBSOCKET_PROTOCOL};
     private boolean gameStarted;
@@ -46,6 +48,7 @@ public class WorldMapActivity extends AppCompatActivity {
         ((ShareQuizApplication) getApplication()).getAppComponent().inject(this);
         setContentView(R.layout.activity_world_map);
         topicId = getIntent().getIntExtra(GameModeSelectionActivity.TOPIC_ID, -1);
+        roomID = getIntent().getStringExtra(GameModeSelectionActivity.ROOM_ID);
         worldMapActivity = this;
         scroll1 = findViewById(R.id.scroll1);
         scroll2 = findViewById(R.id.scroll2);
@@ -95,7 +98,6 @@ public class WorldMapActivity extends AppCompatActivity {
 
     void joinGame(String language) {
         initialiseSocket();
-        GameData gameData = new GameData(Language.valueOf(language), Topic.values()[topicId]);
         socket.once(Constants.GAME_EVENT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -113,7 +115,13 @@ public class WorldMapActivity extends AppCompatActivity {
                 }
             }
         });
-        socket.emit(Constants.JOIN_EVENT, HttpUtils.getJSONObject(gameData));
+        if(roomID == null) {
+            GameData gameData = new GameData(Language.valueOf(language), Topic.values()[topicId]);
+            socket.emit(Constants.JOIN_EVENT, HttpUtils.getJSONObject(gameData));
+        } else {
+            GameRoom gameRoom = new GameRoom(Language.valueOf(language), Topic.values()[topicId], roomID);
+            socket.emit(Constants.JOIN_WITH_ROOM_EVENT, HttpUtils.getJSONObject(gameRoom));
+        }
     }
 
     private void handleGameEvent(final String gameID) {

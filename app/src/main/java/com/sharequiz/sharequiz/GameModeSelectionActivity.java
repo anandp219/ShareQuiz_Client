@@ -3,7 +3,6 @@ package com.sharequiz.sharequiz;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,8 +26,13 @@ public class GameModeSelectionActivity extends AppCompatActivity implements Hori
     private final String TAG = "GameModeSelection";
     private View selectedTopicView = null;
     private int selectedTopic = -1;
-    HorizontalItemsFragment topicSelector;
     public static final String TOPIC_ID = "topicId";
+    public static final String ROOM_ID = "roomID";
+    public static final String ACTION = "action";
+    public static final String JOIN = "join";
+    public static final String CREATE = "create";
+    public static final String LANGUAGE = "language";
+    public static final String SELECT_TOPIC_MESSAGE = "Please select a topic for creating room";
 
     @Inject
     SharedPrefsHelper sharedPrefsHelper;
@@ -95,7 +99,6 @@ public class GameModeSelectionActivity extends AppCompatActivity implements Hori
 
     @Override
     public void itemClicked(View v) {
-        Log.d(TAG, "item clicked with " + ((View) v.getParent()).getId());
         selectedTopic = ((View) v.getParent()).getId();
         if (selectedTopicView != null) {
             selectedTopicView.setBackgroundColor(getResources().getColor(R.color.colorLight));
@@ -109,7 +112,8 @@ public class GameModeSelectionActivity extends AppCompatActivity implements Hori
     }
 
     public void startQuiz(View v) {
-        if(selectedTopic == -1) {
+        if (selectedTopic == -1) {
+            toastHelper.makeToast(SELECT_TOPIC_MESSAGE);
             return;
         }
         Intent intent = new Intent(this, WorldMapActivity.class);
@@ -134,6 +138,41 @@ public class GameModeSelectionActivity extends AppCompatActivity implements Hori
         config.locale = locale;
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
         Intent intent = new Intent(this, GameModeSelectionActivity.class);
+        startActivity(intent);
+    }
+
+    public void joinRoom(View view) {
+        createOrJoinRoom(view, JOIN);
+    }
+
+    public void createRoom(View view) {
+        createOrJoinRoom(view, CREATE);
+    }
+
+    public void createOrJoinRoom(View view, final String action) {
+        sharedPrefsHelper.getValue(SharedPrefsHelper.LANGUAGE,
+            new SharedPrefsHelper.OnEventListener<String>() {
+                @Override
+                public void onSuccess(String s) {
+                    createOrJoinRoom(Language.valueOf(s), action);
+                }
+
+                @Override
+                public void onFailure(String s) {
+                    toastHelper.makeToast("Error while " + action +"ing room");
+                }
+            });
+    }
+
+    public void createOrJoinRoom(Language language, String action) {
+        if (selectedTopic == -1) {
+            toastHelper.makeToast(SELECT_TOPIC_MESSAGE);
+            return;
+        }
+        Intent intent = new Intent(this, RoomActivity.class);
+        intent.putExtra(TOPIC_ID, selectedTopic);
+        intent.putExtra(ACTION, action);
+        intent.putExtra(LANGUAGE, language);
         startActivity(intent);
     }
 }

@@ -7,10 +7,12 @@
     tools:context=".GameModeSelectionActivity">
 
     <LinearLayout
+        android:gravity="center"
+        android:weightSum="3"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/topic_selector"
-        android:padding="20sp">
+        android:layout_below="@+id/topic_selector">
 
         <Button
             android:id="@+id/button_start_quiz"
@@ -18,7 +20,6 @@
             android:layout_height="100sp"
             android:layout_weight="1"
             android:onClick="startQuiz"
-            android:textSize="@dimen/question_text"
             android:text="@string/start_quiz" />
 
         <Button
@@ -26,16 +27,16 @@
             android:layout_width="0dp"
             android:layout_height="100sp"
             android:layout_weight="1"
-            android:text="@string/join_room"
-            android:visibility="gone" />
+            android:onClick="joinRoom"
+            android:text="@string/join_room" />
 
         <Button
             android:id="@+id/button_create_room"
             android:layout_width="0dp"
             android:layout_height="100sp"
             android:layout_weight="1"
-            android:text="@string/create_room"
-            android:visibility="gone" />
+            android:onClick="createRoom"
+            android:text="@string/create_room"/>
     </LinearLayout>
 
     <TextView

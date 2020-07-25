@@ -12,4 +12,8 @@
     <string name="match_tie_string">সমান খেলা</string>
     <string name="join_room">রুমে যোগ দিন</string>
     <string name="create_room">ঘর সৃষ্টি</string>
+    <string name="room_string">রুম আইডি</string>
+    <string name="creating_room_string">ঘর তৈরি হচ্ছে…</string>
+    <string name="creating_room_error">ঘর তৈরি করার সময় ত্রুটি …</string>
+    <string name="joining_room_error">ঘরে যোগদানের সময় ত্রুটি। \n বিষয়টি এবং ভাষা একই রয়েছে তা নিশ্চিত করুন</string>
 </resources>
